@@ -62,7 +62,7 @@ Each method is tested on the same objective function and compared based on:
 
 ```
 ├── methods(part1)/
-|   ├── newton(David)/
+|   ├── 1-2_newton(David)/
 │     ├── newton_modified.py
 │     ├── gauss_newton.py
 |     ├── run_nm_hm.py
@@ -70,7 +70,7 @@ Each method is tested on the same objective function and compared based on:
 │     ├── results_nm_hm/
 │     ├── results_gnm/
 |     ├── utils_nm/
-|   ├── quasinewton(Gergo)/
+|   ├── 3-5_quasinewton(Gergo)/
 │     ├── bfgs.py
 |     ├── dfp.py
 │     ├── sr1_trust_region.py
@@ -81,7 +81,7 @@ Each method is tested on the same objective function and compared based on:
 │     ├── results_dfp/
 │     ├── results_sr1/
 |     ├── utils_qn/
-|   └── hybrid(Diego)/
+|   └── 6_hybrid(Diego)/
 │     ├── gauss_newton_bfgs.py
 │     ├── run_gn_bfgs.py
 │     ├── results_gn_bfgs/
