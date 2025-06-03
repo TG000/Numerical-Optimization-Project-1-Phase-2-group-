@@ -58,34 +58,40 @@ Each method is tested on the same objective function and compared based on:
 
 ---
 
-## 📁 Repository Structure
+## 📁 EXAMPLE Repository Structure
 
 ```
-├── methods/
-│   ├── newton_modified.py
-│   ├── gauss_newton.py
-│   ├── bfgs.py
-│   ├── dfp.py
-│   ├── sr1_trust_region.py
-│   └── gauss_newton_bfgs.py
+├── methods(part1)/
+|   ├── newton(David)/
+│     ├── newton_modified.py
+│     ├── gauss_newton.py
+|     ├── run_nm_hm.py
+│     ├── run_gnm.py
+│     ├── results_nm_hm/
+│     ├── results_gnm/
+|     ├── utils_nm/
+|   ├── quasinewton(Gergo)/
+│     ├── bfgs.py
+|     ├── dfp.py
+│     ├── sr1_trust_region.py
+│     ├── run_bfgs.py
+│     ├── run_dfp.py
+│     ├── run_sr1.py
+│     ├── results_bfgs/
+│     ├── results_dfp/
+│     ├── results_sr1/
+|     ├── utils_qn/
+|   └── hybrid(Diego)/
+│     ├── gauss_newton_bfgs.py
+│     ├── run_gn_bfgs.py
+│     ├── results_gn_bfgs/
+│     └── utils_hy/
 │
-├── utils/
-│   ├── objective_function.py
-│   ├── backtracking.py
-│   ├── plotting.py
-│   └── convergence_metrics.py
-│
-├── experiments/
-│   ├── run_nm_hm.py
-│   ├── run_gnm.py
-│   ├── run_bfgs.py
-│   ├── run_dfp.py
-│   ├── run_sr1.py
-│   └── run_gn_bfgs.py
-│
-├── results/
-│   ├── plots/
-│   └── logs/
+├── comparison_experiments(part2)/
+│     ├── newton.py
+│     ├── run_experiments.py
+│     ├── results_experiments/
+│     └── utils_experiments/
 │
 ├── report/
 │   └── Numerical_Optimization_Phase2_Report.pdf
@@ -96,43 +102,6 @@ Each method is tested on the same objective function and compared based on:
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Python 3.8+
-- Recommended: use a virtual environment
-
-### Installation
-
-```bash
-git clone https://github.com/<your-username>/numerical-opt-project1-phase2.git
-cd numerical-opt-project1-phase2
-pip install -r requirements.txt
-```
-
-### Run Experiments
-
-To run a specific method's experiment:
-
-```bash
-python experiments/run_nm_hm.py
-```
-
-Replace the script name as needed for other methods.
-
----
-
-## 📈 Example Output
-
-For each method, results include:
-
-- A plot comparing `ϕ(x; t)` with `sin(t)`
-- Convergence tables with ℓₖ and qₖ
-- Final parameter vector and its distance to reference solution `x*`
-- Performance logs (iteration count, timing, etc.)
-
----
 
 ## 📝 Report
 
@@ -146,19 +115,10 @@ report/Numerical_Optimization_Phase2_Report.pdf
 
 ## 👥 Contributors
 
-- [Your Name 1]
-- [Your Name 2]
-- [Your Name 3]
+- David Klingbeil
+- Diego Caparros Vaquer
+- Gergely Terényi
+- Testimony Joshua Akpakwere
+- (Tafara Zhande = Random)?
 
 ---
-
-## 📚 References
-
-- Nocedal, J., & Wright, S. J. *Numerical Optimization*, Springer, 2nd ed., 2006.
-- Numerical Optimization 2025 Course Materials
-
----
-
-## 📬 Contact
-
-For questions or feedback, please open an issue or contact us via email.
