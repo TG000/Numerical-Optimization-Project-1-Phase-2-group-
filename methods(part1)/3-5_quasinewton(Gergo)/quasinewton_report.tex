@@ -1,80 +1,581 @@
 \documentclass{article}
 \usepackage{amsmath}
-\usepackage{booktabs}
+\usepackage{amssymb}
 \usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{fancyvrb}
+\usepackage{bm}
 \geometry{margin=1in}
+\usepackage{float}
 
-\title{Optimization Report}
-\author{}
-\date{}
 
 \begin{document}
 
-\maketitle
+\section*{Quasinewton Methods}
 
-\section*{Objective}
-To find a parameter vector $\mathbf{x}^*$ minimizing the discrepancy between $\varphi(\mathbf{x}; t)$ and $\sin(t)$ over the interval $[-2\pi, 2\pi]$, using various optimization algorithms starting from scaled initial guesses.
+For all methods for all runs in this part, \textbf{stopping criterion:} $\|\mathbf{g}\| < 10^{-6}$ or max iter = 100
 
-\section*{Method 1: BFGS}
-\textbf{General Behavior:} BFGS showed some sensitivity to the initial scaling. Moderate scales (0.75) performed best, with low distances to $\mathbf{x}^*$ and stable convergence behavior. At higher scales, convergence worsened.
+\section*{BFGS:}
 
-\begin{tabular}{cccccc}
-\toprule
-Run & Scale & Distance to $\mathbf{x}^*$ & $\ell_k$ & $q_k$ & Runtime (s) \\
-\midrule
-1 & 0.5  & 13.18 & 1.0086 & 0.0772 & 3.20 \\
-2 & 0.75 & 5.21  & 1.0000 & 0.1921 & 1.96 \\
-3 & 1.0  & 43.37 & 0.9989 & 0.0230 & 3.12 \\
-4 & 1.5  & 13.79 & 1.0082 & 0.0737 & 3.16 \\
-5 & 2.0  & 21.92 & 1.0118 & 0.0467 & 3.14 \\
-\bottomrule
-\end{tabular}
+% Run 1
+\subsection*{Run 1: (scale = 0.5)}
+\vspace{1em}
 
-\vspace{0.5em}
-Comments: Best result at scale 0.75. Poor convergence at higher scales.
-
-\section*{Method 2: DFP}
-\textbf{General Behavior:} DFP displayed erratic behavior and was occasionally unstable due to nearly singular updates. Best performance was observed for scale = 1.0, though convergence was still suboptimal.
-
-\begin{tabular}{cccccc}
-\toprule
-Run & Scale & Distance to $\mathbf{x}^*$ & $\ell_k$ & $q_k$ & Runtime (s) \\
-\midrule
-1 & 0.5  & 4.37  & 1.0000 & 0.2286 & 2.05 \\
-2 & 0.75 & 7.22  & 1.0006 & 0.1387 & 3.13 \\
-3 & 1.0  & 4.09  & 0.9961 & 0.2424 & 0.51 \\
-4 & 1.5  & 14.92 & 1.0065 & 0.0679 & 3.21 \\
-5 & 2.0  & 31.87 & 1.0039 & 0.0316 & 3.14 \\
-\bottomrule
-\end{tabular}
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+-1.0809 & -2.4388 & -0.9058 & -6.6190 & 4.5479 & 2.3531 \\
+5.7014 & 4.0227 & 4.6624 & -3.3264 & -0.7440 & -1.4663
+\end{bmatrix}
+\]
 
 \vspace{0.5em}
-Comments: Best result at scale 1.0. Unstable behavior at large scales.
-
-\section*{Method 3: SR1}
-\textbf{General Behavior:} SR1 offered consistent performance at smaller scales and achieved decent proximity to $\mathbf{x}^*$, especially in Run 3. It was, however, slightly less stable at larger initializations.
-
-\begin{tabular}{cccccc}
-\toprule
-Run & Scale & Distance to $\mathbf{x}^*$ & $\ell_k$ & $q_k$ & Runtime (s) \\
-\midrule
-1 & 0.5  & 4.09  & 1.0027 & 0.2457 & 1.99 \\
-2 & 0.75 & 4.51  & 1.0262 & 0.2332 & 1.99 \\
-3 & 1.0  & 4.46  & 1.0000 & 0.2243 & 1.98 \\
-4 & 1.5  & 8.94  & 0.9428 & 0.0995 & 2.03 \\
-5 & 2.0  & 29.85 & 1.0341 & 0.0358 & 2.01 \\
-\bottomrule
-\end{tabular}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 13.175773
 
 \vspace{0.5em}
-Comments: Best result at scale 1.0. Divergence at large scales.
+\noindent
+\boldsymbol{$\ell_k$} = 1.008635
 
-\section*{Analysis}
-\begin{itemize}
-  \item The BFGS method with scale = 0.75 yielded the best results overall, achieving the smallest distance to $\mathbf{x}^*$ and demonstrating stable convergence.
-  \item SR1 showed consistent but slower convergence, with less divergence compared to DFP.
-  \item DFP occasionally skipped updates due to near-zero curvature conditions, making it less reliable.
-  \item All methods benefit from careful tuning of the initial guess; larger scales ($\geq 1.5$) generally degraded performance.
-\end{itemize}
+\noindent
+\boldsymbol{$q_k$} = 0.077213
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 3.2498 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{bfgs-1.png}
+    \caption{Convergence behavior of Run 1 (scale = 0.5)}
+    \label{fig:run1}
+\end{figure}
+
+
+% Run 2
+
+\subsection*{Run 2: (scale = 0.75)}
+\vspace{1em}
+
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+-0.9411 & -1.2555 & -0.6493 & 0.9411 & 1.2555 & 0.6493 \\
+-0.5261 & -2.2526 & 0.4086 & 0.5261 & 2.2526 & -0.4086
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 5.205394
+
+\vspace{0.5em}
+\noindent
+\boldsymbol{$\ell_k$} = 1.000000
+
+\noindent
+\boldsymbol{$q_k$} = 0.192108
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 1.9939 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{bfgs-2.png}
+    \caption{Convergence behavior of Run 2 (scale = 0.75)}
+    \label{fig:run2}
+\end{figure}
+
+
+% Run 3
+
+\subsection*{Run 3: (scale = 1.0)}
+\vspace{1em}
+
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+-15.3170 & -3.1996 & 1.6094 & -16.3998 & -1.1521 & 1.5963 \\
+-5.1207 & -19.8600 & 13.1906 & 27.2052 & -2.2500 & 2.2417
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 43.367214
+
+\vspace{0.5em}
+\noindent
+\boldsymbol{$\ell_k$} = 0.998854
+
+\noindent
+\boldsymbol{$q_k$} = 0.023006
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 3.1850 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{bfgs-3.png}
+    \caption{Convergence behavior of Run 3 (scale = 1.0)}
+    \label{fig:run3}
+\end{figure}
+
+
+% Run 4
+
+\subsection*{Run 4: (scale = 1.5)}
+\vspace{1em}
+
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+0.8902 & -5.0129 & -0.6499 & 8.7286 & 1.4997 & 1.7231 \\
+-7.6670 & 1.4735 & -2.1226 & 0.7368 & -3.7933 & 0.6935
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 13.790752
+
+\vspace{0.5em}
+\noindent
+\boldsymbol{$\ell_k$} = 1.008206
+
+\noindent
+\boldsymbol{$q_k$} = 0.073707
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 3.1941 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{bfgs-4.png}
+    \caption{Convergence behavior of Run 4 (scale = 1.5)}
+    \label{fig:run4}
+\end{figure}
+
+
+% Run 5
+
+\subsection*{Run 5: (scale = 2.0)}
+\vspace{1em}
+
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+9.1294 & -4.5336 & 2.2928 & -10.5100 & -2.6251 & 4.2798 \\
+10.7937 & 2.5347 & -3.4781 & -7.5699 & 4.3296 & 2.0809
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 21.915950
+
+\vspace{0.5em}
+\noindent
+\boldsymbol{$\ell_k$} = 1.011843
+
+\noindent
+\boldsymbol{$q_k$} = 0.046716
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 3.1972 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{bfgs-5.png}
+    \caption{Convergence behavior of Run 5 (scale = 2.0)}
+    \label{fig:run5}
+\end{figure}
+
+\vspace{0.5em}
+
+\noindent
+\textbf{Comments:} The BFGS method exhibited high variability in performance, with a strong dependence on the initial scaling. Run 2 was the most stable, converging to within a distance of 5.21 from $\mathbf{x}^*$, with $\ell_k = 1.000$ and $q_k = 0.192$. This suggests near-linear convergence, though not superlinear as expected from BFGS in ideal conditions.
+
+It fits so well to sin(t) likely because it is biased as $\bar{\mathbf{x}}$ was estimated using BFGS for methods 3-5.
+
+\section*{DFP:}
+
+% Run 1
+\subsection*{Run 1: (scale = 0.5)}
+\vspace{1em}
+
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+-1.0781 & -1.5253 & 0.7567 & 0.5476 & 2.2466 & 0.4112 \\
+1.4494 & 0.6951 & 0.0009 & 0.9409 & 1.2440 & -0.6370
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 4.374717
+
+\vspace{0.5em}
+\noindent
+\boldsymbol{$\ell_k$} = 1.000000
+
+\noindent
+\boldsymbol{$q_k$} = 0.228586
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 2.0782 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{dfp-1.png}
+    \caption{Convergence behavior of Run 1 (scale = 0.5)}
+    \label{fig:dfp-run1}
+\end{figure}
+
+% Run 2
+
+\subsection*{Run 2: (scale = 0.75)}
+\vspace{1em}
+
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+-1.1607 & 4.7025 & -0.8191 & -1.6038 & 3.0196 & 0.9323 \\
+-1.0901 & -1.4623 & 0.7985 & 1.9986 & 2.5155 & -1.2523
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 7.218019
+
+\vspace{0.5em}
+\noindent
+\boldsymbol{$\ell_k$} = 1.000643
+
+\noindent
+\boldsymbol{$q_k$} = 0.138720
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 3.1931 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{dfp-2.png}
+    \caption{Convergence behavior of Run 2 (scale = 0.75)}
+    \label{fig:dfp-run2}
+\end{figure}
+
+% Run 3
+
+\subsection*{Run 3: (scale = 1.0)}
+\vspace{1em}
+
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+-1.0255 & -1.6297 & 0.7017 & -0.0642 & -0.1665 & 0.4478 \\
+1.0808 & 1.4850 & -0.7929 & -0.1356 & -0.6414 & -0.7589
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 4.093776
+
+\vspace{0.5em}
+\noindent
+\boldsymbol{$\ell_k$} = 0.996106
+
+\noindent
+\boldsymbol{$q_k$} = 0.242375
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 0.5208 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{dfp-3.png}
+    \caption{Convergence behavior of Run 3 (scale = 1.0)}
+    \label{fig:dfp-run3}
+\end{figure}
+
+% Run 4
+
+\subsection*{Run 4: (scale = 1.5)}
+\vspace{1em}
+
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+0.4442 & 0.3916 & 0.0076 & -10.4362 & -0.3196 & 2.4098 \\
+8.2042 & 0.7796 & -1.9122 & 4.4001 & -2.4851 & 2.4265
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 14.920831
+
+\vspace{0.5em}
+\noindent
+\boldsymbol{$\ell_k$} = 1.006463
+
+\noindent
+\boldsymbol{$q_k$} = 0.067890
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 3.2800 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{dfp-4.png}
+    \caption{Convergence behavior of Run 4 (scale = 1.5)}
+    \label{fig:dfp-run4}
+\end{figure}
+
+% Run 5
+
+\subsection*{Run 5: (scale = 2.0)}
+\vspace{1em}
+
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+-6.9806 & 1.6608 & -2.5250 & 0.2264 & 3.8056 & -1.1233 \\
+1.0060 & 4.7691 & 30.0997 & 6.9964 & 1.5981 & -1.7032
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 31.871335
+
+\vspace{0.5em}
+\noindent
+\boldsymbol{$\ell_k$} = 1.003897
+
+\noindent
+\boldsymbol{$q_k$} = 0.031621
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 3.1991 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{dfp-5.png}
+    \caption{Convergence behavior of Run 5 (scale = 2.0)}
+    \label{fig:dfp-run5}
+\end{figure}
+
+\noindent
+\textbf{Comments:} DFP displayed highly erratic performance across the tested scales. Runs 1 and 3 achieved relatively moderate distances to $\mathbf{x}^*$ (4.37 and 4.09, respectively), but exhibited $\ell_k$ values extremely close to 1, and $q_k$ values around 0.23–0.24, indicative of at best \textit{linear convergence}. In both cases, curvature updates were occasionally skipped due to near-zero inner products ($y^T s \approx 0$), undermining Hessian updates and contributing to stagnation.
+However, the resulting $\varphi(\bar{\mathbf{x}}; t)$ in these runs still visually approximates $\sin(t)$ reasonably well, suggesting that even imperfect convergence can yield functionally useful results.
+
+
+
+
+\section*{SR1 Results}
+
+% Run 1
+\subsection*{Run 1 (scale = 0.5)}
+\vspace{1em}
+
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+1.0918 & 1.5568 & 0.7157 & -1.0687 & -1.6807 & 0.6749 \\
+-0.3680 & -0.6154 & -0.2197 & -0.0035 & -2.3843 & 0.6564
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 4.091887
+
+\vspace{0.5em}
+\noindent
+$\ell_k = 1.002692$
+
+\noindent
+$q_k = 0.245704$
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 2.0340 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{sr1-1.png}
+    \caption{Convergence behavior of Run 1 (scale = 0.5)}
+\end{figure}
+
+% Run 5
+
+\subsection*{Run 2 (scale = 0.75)}
+\vspace{1em}
+
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+-0.7811 & -0.9754 & -0.6688 & 0.9402 & 1.7955 & 0.6204 \\
+0.4541 & 0.6732 & -0.6821 & -0.7157 & -2.0541 & -0.5081
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 4.514975
+
+\vspace{0.5em}
+\noindent
+$\ell_k = 1.026155$
+
+\noindent
+$q_k = 0.233223$
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 2.0378 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{sr1-2.png}
+    \caption{Convergence behavior of Run 2 (scale = 0.75)}
+\end{figure}
+
+% Run 5
+
+\subsection*{Run 3 (scale = 1.0)}
+\vspace{1em}
+
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+0.5261 & 2.2526 & -0.4086 & -0.5261 & -2.2526 & -0.4085 \\
+0.9411 & 1.2555 & -0.6493 & -0.9411 & -1.2555 & -0.6493
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 4.457463
+
+\vspace{0.5em}
+\noindent
+$\ell_k = 1.000000$
+
+\noindent
+$q_k = 0.224343$
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 2.0291 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{sr1-3.png}
+    \caption{Convergence behavior of Run 3 (scale = 1.0)}
+\end{figure}
+
+% Run 5
+
+\subsection*{Run 4 (scale = 1.5)}
+\vspace{1em}
+
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+0.7247 & 0.9862 & 0.0200 & -0.4729 & -6.7756 & 0.5235 \\
+-3.6530 & -1.7786 & 1.3066 & 2.4309 & -1.9672 & 2.2817
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 8.936805
+
+\vspace{0.5em}
+\noindent
+$\ell_k = 0.942776$
+
+\noindent
+$q_k = 0.099457$
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 2.0902 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{sr1-4.png}
+    \caption{Convergence behavior of Run 4 (scale = 1.5)}
+\end{figure}
+
+
+
+\subsection*{Run 5 (scale = 2.0)}
+\vspace{1em}
+
+\textbf{Stopping criterion:} $\|g\| < 1 \times 10^{-6}$ or max\_iter = 100
+
+\vspace{0.5em}
+\textbf{Final iterate:}
+\[
+\bar{\mathbf{x}} =
+\begin{bmatrix}
+0.7866 & -0.7551 & -0.0173 & -1.4401 & -1.5910 & 0.8463 \\
+0.0306 & -2.6672 & 8.6018 & 0.5695 & -22.2815 & 18.4644
+\end{bmatrix}
+\]
+
+\vspace{0.5em}
+\noindent
+\textbf{Distance to } $\mathbf{x}^*$: 29.854298
+
+\vspace{0.5em}
+\noindent
+$\ell_k = 1.034099$
+
+\noindent
+$q_k = 0.035819$
+
+\vspace{0.5em}
+\noindent
+\textbf{Runtime:} 2.0566 seconds
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{sr1-5.png}
+    \caption{Convergence behavior of Run 5 (scale = 2.0)}
+\end{figure}
+
+\noindent
+\textbf{Comments:} SR1 generally performed with more stability than DFP, although it too showed signs of divergence at higher scales. Runs 1 through 3 consistently yielded distances in the range of 4.09 to 4.51, with $\ell_k \approx 1.00$ and $q_k$ around 0.22–0.25. These values imply \textit{steady but non-accelerating convergence}, suggestive of near-linear behavior. However, despite this steady convergence, SR1's final approximations of $\sin(t)$ were less accurate compared to those achieved by DFP and BFGS.
 
 \end{document}
